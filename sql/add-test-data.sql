@@ -1,0 +1,1 @@
+INSERT INTO USERS (NAME,PASSWD,JOINED,LAST_LOGIN) VALUES ('ilkka', 'test', '2014-03-25 15:36:38', current_timestamp);

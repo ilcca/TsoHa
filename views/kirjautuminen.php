@@ -1,10 +1,3 @@
-<?php
-if ($_POST) {
-    $virhe = "Kirjautuminen väärin!<br>";
-}
-
-?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,19 +10,16 @@ if ($_POST) {
     <body>
         <div>
             Kirjautuminen:<br>
-            <form name="input" action="index.php" method="post">
-            Tunnus: <input type="text" name="user" value=" <?php echo $_POST[user]?>"><br>
+            <form name="input" action="." method="post">
+            Tunnus: <input type="text" name="user" value="<?php echo $_POST[user]?>"><br>
             Salasana: <input type="password" name="passwd" value="<?php echo $_POST[passwd]?>">
             <input type="submit" value="Lähetä"><br>
-            <?php if ($virhe) {
-                echo $virhe;
-            }
-            ?>
             </form> 
-            
+<?php echo $_SESSION["virhe"]["login"]; ?>            
         </div>
 <?php 
-print_r($_POST);
+echo "SESSION:<br>";
+print_r($_SESSION);
 ?>
 
     </body> 

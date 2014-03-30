@@ -1,15 +1,21 @@
+<?php 
+echo "SESSION:<br>";
+print_r($_SESSION);
+?>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Kävijäseuranta - kirjautuminen</title>
+        <title>Kävijäseuranta - Etusivu</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="../css/bootstrap.css" rel="stylesheet">
         <link href="../css/bootstrap-theme.css" rel="stylesheet">
         <link href="../css/main.css" rel="stylesheet">
     </head>
     <body>
+        <h1>Etusivu</h1>
         <div> 
-        Käyttäjä: ilkka<br>
+        Käyttäjä: <?php echo $_SESSION[kayttaja][nimi]; ?>            
+        <br>
         </div>
         <div>
             <form name="input" action="etusivu.php" method="post">
