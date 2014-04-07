@@ -1,6 +1,8 @@
 <?php 
 echo "SESSION:<br>";
 print_r($_SESSION);
+echo "POST:<br>";
+print_r($_POST);
 ?>
 <!DOCTYPE html>
 <html>
@@ -12,83 +14,55 @@ print_r($_SESSION);
         <link href="../css/main.css" rel="stylesheet">
     </head>
     <body>
-        <h1>Etusivu</h1>
+        <h2>RAPORTTISIVU</h2>
         <div> 
-        Käyttäjä: <?php echo $_SESSION[kayttaja][nimi]; ?>            
+        Käyttäjä: <?php echo $_SESSION[kayttaja][nimi]; ?>
         <br>
         </div>
         <div>
-            <form name="input" action="etusivu.php" method="post">
-            <input type="submit" value="Uusi raportti">
-            <input type="submit" value="Tallenna nykyinen"><br>
+            <b>Tapahtumaraportti</b><br>
+            <form name="input" action="index.php" method="post">
+            Alkuaika <input type="text" name="tapahtumat_alku" value='<?php echo $_SESSION["tapahtumaraportti"]["alku"]?>'>
+            Loppuaika <input type="text" name="tapahtumat_loppu" value='<?php echo $_SESSION["tapahtumaraportti"]["loppu"]?>'>
+            <input type="submit" value="Lähetä"><br>
+            <i>Alkuaika: 1970-01-01 00:00:00 Loppuaika: 2070-01-01 00:00:00</i><br>
             </form> 
-            Viikot vuoden alusta<br>
-            <table>
-                <tr>
-                    <th>Viikko</th>
-                    <th>Sivunäytöt</th>
-                    <th>Selaimet</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>500</td>
-                    <td>60</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>500</td>
-                    <td>60</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>500</td>
-                    <td>50</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>400</td>
-                    <td>60</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>600</td>
-                    <td>40</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>500</td>
-                    <td>50</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>400</td>
-                    <td>40</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>500</td>
-                    <td>60</td>
-                </tr>
+<?php
+$riveja = $tapahtumadata->rowCount();
 
-            </table>
+echo 'Taphtumia: '. $riveja. '<br />';
+echo '<table border=1><tr><th>Tapahtuma-id</th><th>Eväste-id</th><th>Sivun url</th><th>Sivun otsikko</th><th>Tapahtui</th></tr>';
 
+foreach($tapahtumadata as $row) {
+  echo '<tr><td>'.$row['evid'].'</td><td>'.$row['cookie'].'</td><td>'.$row['url'].'</td><td>'.$row['title'].'</td><td>'.$row['created'].'</td></tr>';
+}
+echo '</table>'
+?>
+<br>
+        </div>            
+<div>
+            <b>Kävijäraportti</b><br>
+            <form name="input" action="index.php" method="post">
+            Alkuaika <input type="text" name="kavija_alku" value='<?php echo $_SESSION["kavijaraportti"]["alku"]?>'>
+            Loppuaika <input type="text" name="kavija_loppu" value='<?php echo $_SESSION["kavijaraportti"]["loppu"]?>'>
+            <input type="submit" value="Lähetä"><br>
+            <i>Alkuaika: 1970-01-01 00:00:00 Loppuaika: 2070-01-01 00:00:00</i><br>
+            </form> 
 
-        </div>
-        <div>
-            <table>
-                <tr>
-                    <th>Nimi</th>
-                </tr>
-                <tr>
-                    <td><a href="etusivu.php">Viikot vuoden alusta</a></td>
-                </tr>
-                <tr>
-                    <td><a href="etusivu.php">Suosituimmat sivut 7 päivää</a></td>
-                </tr>
+                <?php
+$riveja = $kavijadata->rowCount();
 
-            </table>
-        </div>
+echo 'Kävijöitä (selaimia): '. $riveja. '<br />';
+echo '<table border=1><tr><th>Eväste-id</th><th>User-agent</th><th>Ensimmäinen tapahtuma</th><th>Viimeisin tapahtuma</th></tr>';
 
-    </body> 
+foreach($kavijadata as $row) {
+  echo '<tr><td>'.$row['bid'].'</td><td>'.$row['agent'].'</td><td>'.$row['created'].'</td><td>'.$row['visited'].'</td></tr>';
+}
+echo '</table>'
+?>
+
+</div            
+
+</body> 
 </html>
 
