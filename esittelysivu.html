@@ -10,19 +10,22 @@
   </head>
   <body>
     <h1>Tietokantasovelluksen esittelysivu - Ilkka Porna</h1>
-    <p>HUOM! Dealine 4:n dokumentaatio tämän esittelysivun kautta<br>
+    <p>
         <b>Kävijädatan keruumekanismi:</b><br>
         <a href="http://porna.users.cs.helsinki.fi/tsoha/testisivut/testisivu.php">Testisivuilla</a> (10 kpl dynaamisesti muodostettuja) on kävijädatan keruu tagitus päällä sivupohjassa. Klikkailemalla testisivulta toiselle linkkien kautta, jokainen uusi sivulataus kerryttää kävijädataa. Tagi sivuilla lähettää osoitteeseen /tsoha/track.php http-pyynntöjä, joihin on javascriptilla asetettu get-parametriin sivun otsikko.
         track.php parsii tiedot http-pyynnöstä ja tallettaa sivun urlin ja otsikon kantaa tauluun events. track.php myös tarkistaa onko kävijällä mittausevästettä. Jos ei ole se muodostaa tauluun browsers uuden numeroidun rivin ja asettaa kävijän selaimelle mittausevästeen, jossa rivin numero. Jos eväste on jo olemassa track.php päivittää kysisen evästenumeron riviä taulussa browsers. browsers tauluun asetetaan luontiaika (eli selaimen ensimmäisen sivulatauksen ajankohta) sekä viimeisimmän sivultauksen ajankohta. Lisäksi browsers tauluun tallennetaa selaimen user-agent http-pyynnöstä, joka sisältää teknisiä yksityiskohtia kävijän selaimesta. Evästeen numero tallennetaan myös events-taulun riveihin, joka on foreign key taulussa.<br>
         <br>
         <b>Kävijädatan lukeminen</b><br>
-        <a href="http://porna.users.cs.helsinki.fi/tsoha/">Kirjautumalla sisäsään palveluun</a> (tunnus: ilkka salasana: test) pääsee lukemaan kävijädataa raporttinäkymästä. Raporttinäkymässä on kaksi raportti: Tapahtumaraportti ja Kävijäraportti. Tässä vaiheessa ne listaavat rivitason tiedor kummastakin taulusta. Jos klikkailee testisvuilla ja päivittää (esim. jommasta kummasta napista sivulla) raporttinäkymän niin näkee oman selaimen liikkeet tauluissa. Jos tyhjentää testisivujen asettaman keksin selaimesta (nimi on tracker) ja menee uudelleen klikkailemaan testisivuja, niin raportteihin ilmestyy uusi selainnumero ja sen tapahtumia.<br>
-        Raporttien aikaikkunat eivät vielä toimi, mutta annetut arvot kulkevat mukana, jos niitä vaihtaa.<br>
+        <a href="http://porna.users.cs.helsinki.fi/tsoha/">Kirjautumalla sisäsään palveluun</a> (tunnus: ilkka salasana: test) pääsee lukemaan kävijädataa raporttinäkymästä. Raporttinäkymässä on nyt kolme raporttia näkyvillä, joita jokaista voi kontrolloida rajaamalla hakuja näkyvillä olevista painikkeista. Ensimmäinen raportti on top-sivut raportti, jossa on jo monipuolisesti vaihtoehtoja koota, sortata, rajata aikaikkunaa tai suodattaa sisällön perusteella.<br>
+        Kaksi muuta ovat kahdesta taulusta raakdatan listaamista varten. Jos klikkailee testisvuilla, niin näkee oman selaimen liikkeet kertyvän näihin taluihin raporteista.<br><br>
         <br>
-        Alkavalla viikolla on tarkoitus keskittyä näiden raporttinäkymien kehittämiseen sellaisiksi, että soveltuvat datan analysointiin monipuolisesti...
-        
-        
-
+    </p>Muuta:<br>
+        Tehty:<br>
+        Tietokantojen kättö suojattu SQL-injektioilta<br>
+        Kaikki toiminnot toteutettu MVC-mallin mukaisesti<br>
+        Käyttäjien syötteet validoidaan (timestampin vielä puuttuu) ja käyttäjien antamat asetukset kulkevat näkymissä mukana täysin<br>
+        Logout -lisätty
+        Dokumentaatiota on päivitetty nykyistä tilannetta vastaavalla rakennekuvauksella
         
         
             

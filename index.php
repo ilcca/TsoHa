@@ -1,7 +1,14 @@
 <?php
 session_start();
+//logout
+if ($_POST[logout]=="Logout") {
+    session_destroy();
+    header("Location: .");
+    exit;
+}
 require 'libs/models/tietokantatoiminnot.php';
 
+//Ohjataan kirjautumiseen ja tarkistetaan kirjautuminen
 if (empty($_SESSION["login"])) {
     if (isset($_POST["user"]) and isset($_POST["passwd"])) {
         $_SESSION["user"]=$_POST["user"];
@@ -26,39 +33,29 @@ if (empty($_SESSION["login"])) {
     }
 }
 
-//Alustetaan muuttujia näkymiä varten
+//Jatkaa tänne jos kirjautunut käyttäjä...
 
-if (!isset($_SESSION["tapahtumaraportti"]["alku"])) {
-    $_SESSION["tapahtumaraportti"]["alku"]="1970-01-01 00:00:00";
-}
-if (!isset($_SESSION["tapahtumaraportti"]["loppu"])) {
-    $_SESSION["tapahtumaraportti"]["loppu"]="2070-01-01 00:00:00";
-}
-if (!isset($_SESSION["kavijaraportti"]["alku"])) {
-    $_SESSION["kavijaraportti"]["alku"]="1970-01-01 00:00:00";
-}
-if (!isset($_SESSION["kavijaraportti"]["loppu"])) {
-    $_SESSION["kavijaraportti"]["loppu"]="2070-01-01 00:00:00";
-}
+//Validoidaan syötteet tai alustetaan ensinäkymän alkuarvoja
+require 'libs/validoi.php';
+$topsivut["syote"] = validoiTopSivutSyote();
+$tapahtumadata["syote"] = validoiTapahtumaRaporttiSyote();
+$kavijadata["syote"] = validoiKavijaRaporttiSyote();
 
+//Model...
 
-if (isset($_POST[tapahtumat_alku])){
-    $_SESSION["tapahtumaraportti"]["alku"]=$_POST[tapahtumat_alku];
-}
-if (isset($_POST[tapahtumat_loppu])){
-    $_SESSION["tapahtumaraportti"]["loppu"]=$_POST[tapahtumat_loppu];
-}
-if (isset($_POST[kavijat_alku])){
-    $_SESSION["kavijaraportti"]["alku"]=$_POST[kavijat_alku];
-}
-if (isset($_POST[kavijat_loppu])){
-    $_SESSION["kavijaraportti"]["alku"]=$_POST[kavijat_loppu];
-}
+//Top-sivut -raportti
+//Haetaan sivujen datarivit metriikoiden totaalit samoilla hakuehdoilla
+$topsivut["data"]["rivit"] = haeTopSivutRivit($topsivut["syote"]["kentta"], $topsivut["syote"]["alku"], $topsivut["syote"]["loppu"], $topsivut["syote"]["jarjestaja"], $topsivut["syote"]["jarjestys"], $topsivut["syote"]["title"], $topsivut["syote"]["url"]);
+$topsivut["data"]["totaalit"] = haeTopSivutTotaalit($topsivut["syote"]["kentta"], $topsivut["syote"]["alku"], $topsivut["syote"]["loppu"], $topsivut["syote"]["title"], $topsivut["syote"]["url"]);
 
+//Tapahtumatraportin ja Kävijäraportin datojen haku
+$tapahtumadata["data"]["rivit"] = haeTaulukko("events", $tapahtumadata["syote"]["alku"], $tapahtumadata["syote"]["loppu"]);
+$kavijadata["data"]["rivit"] = haeTaulukko("browsers", $kavijadata["syote"]["alku"], $kavijadata["syote"]["loppu"]);
 
-//haetaan dataa kahteen raporttiin
-$tapahtumadata = haeTaulukko("events");
-$kavijadata = haeTaulukko("browsers");
+//View...
 
-require 'views/etusivu.php';
+//Apufunktioita kehiin näyttämään eri raportteja
+require 'views/apufunktiot.php';
+//Tulostetaan raporttinäkymän sivupohja, joka kutsuu sitten apufunktioita
+require 'views/pohjat/etusivu.php';
 exit;

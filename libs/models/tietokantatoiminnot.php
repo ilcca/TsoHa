@@ -16,14 +16,12 @@ function tarkistaKirjautuminen($nimi, $salasana) {
     $yhteys = getTietokantayhteys();
 
     
-//    $sql = "SELECT * from users where name = ? AND passwd = ? LIMIT 1";
-    $sql = "SELECT * from users where name = '".$nimi."' and passwd = '".$salasana."'";
+    $sql = "SELECT * from users where name = ? AND passwd = ? LIMIT 1";
     
     $_SESSION[sql][login] = $sql; //troubleshooting
 
     $kysely = $yhteys->prepare($sql);
-//    $kysely->execute(array(nimi, $salasana));
-    $kysely->execute();
+    $kysely->execute(array($nimi, $salasana));
     $tulos = $kysely->fetchObject();
 
     if ($tulos == null) {
@@ -36,10 +34,11 @@ function tarkistaKirjautuminen($nimi, $salasana) {
 }
 
 function LuoUusiKavija($yhteys, $useragent) {
-    $sql = "INSERT INTO browsers(agent, created, visited) values ('".$useragent."', current_timestamp, current_timestamp) RETURNING bid;";
+//    $sql = "INSERT INTO browsers(agent, created, visited) values ('".$useragent."', current_timestamp, current_timestamp) RETURNING bid;";
     
+    $sql = "INSERT INTO browsers(agent, created, visited) values (?, current_timestamp, current_timestamp) RETURNING bid;";
     $kysely = $yhteys->prepare($sql);
-    $kysely->execute();
+    $kysely->execute(array($useragent));
     $tulos = $kysely->fetchColumn();
 
     //palauttaa luodun kävijän ID:n
@@ -48,31 +47,68 @@ function LuoUusiKavija($yhteys, $useragent) {
 }
 
 function PaivitaKavija($yhteys, $cookie, $useragent) {
-    $sql = "UPDATE browsers SET agent='".$useragent."', visited = current_timestamp WHERE bid=".$cookie.";";    
+    $sql = "UPDATE browsers SET agent=?, visited = current_timestamp WHERE bid=?;";    
     $kysely = $yhteys->prepare($sql);
-    $kysely->execute();
+    $kysely->execute(array($useragent, $cookie));
     return $sql;
 }
 
 function LisaaTapahtuma($yhteys, $cookie, $url, $title) {
     $sql = "INSERT INTO EVENTS (COOKIE, URL, TITLE, CREATED) 
-        VALUES ('".$cookie."', '".$url."', '".$title."', current_timestamp)";
+        VALUES (?, ?, ?, current_timestamp)";
     
     $kysely = $yhteys->prepare($sql);
-    $kysely->execute();
+    $kysely->execute(array($cookie, $url, $title));
     
 }
 
-function haeTaulukko($taulukko) {
+function haeTaulukko($taulu, $alku, $loppu) {
     $yhteys = getTietokantayhteys();
     
-    $sql = "SELECT * FROM ".$taulukko." WHERE created >= '2014-04-01 13:40:15' and created <= '2014-04-07 13:40:24'";
+    $sql = "SELECT * FROM ".$taulu." WHERE created >= ? and created <= ? ";
     
-    $tulokset = $yhteys->query($sql);
+    $kysely = $yhteys->prepare($sql);
+    $kysely->execute(array($alku, $loppu));
+    
+    $tulokset = $kysely->fetchAll(PDO::FETCH_ASSOC);
     return $tulokset;
+
     
 }
-function haeTaulukko_test($taulukko) {
+function haeTopSivutRivit($kentta, $alku, $loppu, $jarjestaja, $jarjestys, $title, $url) {
+    $yhteys = getTietokantayhteys();
+
+    $select = 'SELECT '.$kentta.' as kentta, count(*) as sivulataukset, count(distinct cookie) as selaimet FROM events ';
+    $where = 'WHERE created >= ? and created <= ? and url like ? and title like ? ';
+    $group = 'GROUP BY kentta ';
+    $order = 'order by '.$jarjestaja.' '.$jarjestys.' ';
+    $sql = $select.$where.$group.$order.';';
+    
+//$sql = 'SELECT '.$kentta.' as kentta, count(*) as sivulataukset, count(distinct cookie) as selaimet FROM events WHERE created >= ? and created <= ? and group by kentta order by '.$jarjestaja.' '.$jarjestys.';';
+
+    $kysely = $yhteys->prepare($sql);
+    $kysely->execute(array($alku, $loppu, $url, $title));
+    
+    $tulokset = $kysely->fetchAll(PDO::FETCH_ASSOC);
+    return $tulokset;
+   
+}
+function haeTopSivutTotaalit($kentta, $alku, $loppu, $title, $url) {
+    $yhteys = getTietokantayhteys();
+
+    $select = 'SELECT count(distinct '.$kentta.') as kpl, count(*) as sivulataukset, count(distinct cookie) as selaimet FROM events ';
+    $where = 'WHERE created >= ? and created <= ? and url like ? and title like ? ';
+    $sql = $select.$where.';';
+//    $sql = 'SELECT count(distinct '.$kentta.') as kpl, count(*) as sivulataukset, count(distinct cookie) as selaimet FROM events WHERE created >= ? and created <= ? ';
+    $kysely = $yhteys->prepare($sql);
+    $kysely->execute(array($alku, $loppu, $url, $title));
+    
+    $tulokset = $kysely->fetch(PDO::FETCH_ASSOC);
+    return $tulokset;
+   
+}
+
+/*function haeTaulukko_test($taulukko) {
     $yhteys = getTietokantayhteys();
     
     //$sql = "SELECT * FROM ".$taulukko. "where created > '".$ehdot["alku"]."' and created < '".$ehdot["loppu"]."'";
@@ -93,4 +129,4 @@ function haeTaulukko_test($taulukko) {
      
     
 }
-
+*/
