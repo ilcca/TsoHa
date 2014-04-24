@@ -3,22 +3,22 @@
     <head>
         <title>Kävijäseuranta - Etusivu</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="/css/bootstrap.css" rel="stylesheet">
-        <link href="/css/bootstrap-theme.css" rel="stylesheet">
-        <link href="/css/main.css" rel="stylesheet">
+        <link href="http://porna.users.cs.helsinki.fi/tsoha/css/bootstrap.css" rel="stylesheet">
+        <link href="http://porna.users.cs.helsinki.fi/tsoha/css/bootstrap-theme.css" rel="stylesheet">
+        <link href="http://porna.users.cs.helsinki.fi/tsoha/css/main.css" rel="stylesheet">
     </head>
     <body>
+        <div class="container">
         <h2>RAPORTTISIVU</h2>
         <div> 
         <form name="logout" action="index.php" method="post">
             Käyttäjä: <?php echo $_SESSION[kayttaja][nimi]; ?>
             <input type="submit" name="logout" value="Ulos">
         </form>
-        <br>
         <hr>
         </div>
 
-        <form name="input" action="index.php" method="post">
+        <form class="form-horizontal" role="form" name="input" action="index.php" method="post">
 
 <?php
 naytaTopSivut($topsivut);
@@ -37,6 +37,7 @@ print_r($_POST);
 ?>
 
 </form>
+</div>
 </body> 
 </html>
 

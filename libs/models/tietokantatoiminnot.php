@@ -80,6 +80,10 @@ function haeTopSivutRivit($kentta, $alku, $loppu, $jarjestaja, $jarjestys, $titl
 
     $select = 'SELECT '.$kentta.' as kentta, count(*) as sivulataukset, count(distinct cookie) as selaimet FROM events ';
     $where = 'WHERE created >= ? and created <= ? and url like ? and title like ? ';
+    
+    $teksti = "%";
+    $where = $where."and cookie in (SELECT cookie FROM events WHERE title like '".$teksti."')";
+
     $group = 'GROUP BY kentta ';
     $order = 'order by '.$jarjestaja.' '.$jarjestys.' ';
     $sql = $select.$where.$group.$order.';';
@@ -90,6 +94,10 @@ function haeTopSivutRivit($kentta, $alku, $loppu, $jarjestaja, $jarjestys, $titl
     $kysely->execute(array($alku, $loppu, $url, $title));
     
     $tulokset = $kysely->fetchAll(PDO::FETCH_ASSOC);
+//    echo $sql;
+//    die;
+
+    
     return $tulokset;
    
 }
@@ -98,6 +106,12 @@ function haeTopSivutTotaalit($kentta, $alku, $loppu, $title, $url) {
 
     $select = 'SELECT count(distinct '.$kentta.') as kpl, count(*) as sivulataukset, count(distinct cookie) as selaimet FROM events ';
     $where = 'WHERE created >= ? and created <= ? and url like ? and title like ? ';
+
+    //demo
+    $teksti = "%";
+    $where = $where."and cookie in (SELECT cookie FROM events WHERE title like '".$teksti."')";
+    
+    
     $sql = $select.$where.';';
 //    $sql = 'SELECT count(distinct '.$kentta.') as kpl, count(*) as sivulataukset, count(distinct cookie) as selaimet FROM events WHERE created >= ? and created <= ? ';
     $kysely = $yhteys->prepare($sql);

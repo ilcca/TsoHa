@@ -1,0 +1,6 @@
+DROP TABLE testpages;
+CREATE TABLE testpages (
+   PID SERIAL PRIMARY KEY,
+   TITLE     TEXT    NOT NULL,
+   CONTENT   TEXT    NOT NULL
+);
