@@ -26,7 +26,7 @@
 <select name="topsivut_jarjestaja" class="form-control">
   <option value="sivulataukset" <?php if ($syote[jarjestaja]=="sivulataukset") echo 'selected="selected"'?> >Sivulataukset</option>
   <option value="selaimet" <?php if ($syote[jarjestaja]=="selaimet") echo 'selected="selected"'?> >Selaimet</option>
-</select> 
+</select>
 </div>
 <label for="topsivut_jarjestys" class="col-md-2 control-label">Järjestys:</label>
 <div class="col-md-2"> 
@@ -37,14 +37,21 @@
 </div>
 </div>
 <b><i>Taphtumien aikarajaus:</i></b><br>
-Aikaisintaan <input type="text" name="topsivut_alku" value='<?php echo $syote["alku"]?>'>
-Viimeistään<input type="text" name="topsivut_loppu" value='<?php echo $syote["loppu"]?>'>
-<br>
-<b><i>Suodatussäännöt:</i></b><br>
-Osoite (url) sisältää:<input type="text" name="topsivut_url" value='<?php echo $syote["url"]?>'><br>
-Otsikko sisältää:<input type="text" name="topsivut_title" value='<?php echo $syote["title"]?>'><br>
+<div class="form-group">
+<label for="topsivut_alku" class="col-md-2 control-label">Aikaisintaan</label>
+<div class="col-md-2"><input type="text" name="topsivut_alku" value='<?php echo $syote["alku"]?>'></div>
+<label for="topsivut_loppu" class="col-md-2 control-label">Viimeistään</label>
+<div class="col-md-2"><input type="text" name="topsivut_loppu" value='<?php echo $syote["loppu"]?>'></div>
+</div>
 
-<input type="submit" value="Hae">
+<b><i>Suodatussäännöt:</i></b><br>
+<div class="form-group">
+    <label for="topsivut_url" class="col-md-2 control-label">Osoite (url) sisältää:</label>
+    <div class="col-md-2"><input type="text" name="topsivut_url" value='<?php echo $syote["url"]?>'></div>
+    <label for="topsivut_title" class="col-md-2 control-label">Otsikko sisältää:</label>
+    <div class="col-md-2"><input type="text" name="topsivut_title" value='<?php echo $syote["title"]?>'></div>
+</div>
+<div class="form-group"><input type="submit" value="Hae"></div>
 
 <?php
     echo '<table class="table table-striped"><thead><tr><th>Sivu: '.$kentta.'</th><th>Sivulataukset</th><th>Selaimia</th></tr></thead><tbody>';

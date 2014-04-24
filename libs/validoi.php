@@ -7,7 +7,7 @@ function validoiTopSivutSyote() {
         $syote["alku"]=$_POST[topsivut_alku];
     }
     else {
-        $syote["alku"]="2014-04-01 10:00:00";
+        $syote["alku"]="2014-04-24 10:00:00";
     } 
 
     if (isset($_POST[topsivut_loppu])){
@@ -73,7 +73,7 @@ function validoiTapahtumaRaporttiSyote() {
         $syote["alku"]=$_POST[tapahtumat_alku];
     }
     else {
-        $syote["alku"]="2014-04-01 10:00:00";
+        $syote["alku"]="2014-04-24 10:00:00";
     } 
 
     if (isset($_POST[tapahtumat_loppu])){
@@ -91,7 +91,7 @@ function validoiKavijaRaporttiSyote() {
         $syote["alku"]=$_POST[kavija_alku];
     }
     else {
-        $syote["alku"]="2014-04-01 10:00:00";
+        $syote["alku"]="2014-04-24 10:00:00";
     } 
 
     if (isset($_POST[kavija_loppu])){

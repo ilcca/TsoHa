@@ -1,7 +1,7 @@
 <?php
 session_start();
 //logout
-if ($_POST[logout]=="Logout") {
+if ($_POST[logout]=="Ulos") {
     session_destroy();
     header("Location: .");
     exit;

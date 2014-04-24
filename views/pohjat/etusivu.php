@@ -21,6 +21,7 @@
         <form class="form-horizontal" role="form" name="input" action="index.php" method="post">
 
 <?php
+//print_r($_POST);
 naytaTopSivut($topsivut);
 ?>
 <?php 

@@ -65,7 +65,7 @@ function LisaaTapahtuma($yhteys, $cookie, $url, $title) {
 function haeTaulukko($taulu, $alku, $loppu) {
     $yhteys = getTietokantayhteys();
     
-    $sql = "SELECT * FROM ".$taulu." WHERE created >= ? and created <= ? ";
+    $sql = "SELECT * FROM ".$taulu." WHERE created >= ? and created <= ? order by created";
     
     $kysely = $yhteys->prepare($sql);
     $kysely->execute(array($alku, $loppu));
