@@ -1,66 +1,59 @@
 <?php
 
-function validoiTopSivutSyote() {
-
+function validoiTopSivutSyote($i, $topsivut) {
     //Aikarajausten asetukset
-    if (isset($_POST[topsivut_alku])){
-        $syote["alku"]=$_POST[topsivut_alku];
+    if (isset($_POST[topsivut_.$i._alku])){
+        $syote["alku"]=$_POST[topsivut_.$i._alku];
     }
     else {
-        $syote["alku"]="2014-04-24 10:00:00";
+        $syote["alku"]=$topsivut["starttime"];
     } 
 
-    if (isset($_POST[topsivut_loppu])){
-        $syote["loppu"]=$_POST[topsivut_loppu];
+    if (isset($_POST[topsivut_.$i._loppu])){
+        $syote["loppu"]=$_POST[topsivut_.$i._loppu];
     }
     else {
-        $syote["loppu"]="2014-04-30 23:00:00";
+        $syote["loppu"]=$topsivut["endtime"];
     } 
 
     //Lajittelusääntöjen asetukset
 
-    if ($_POST[topsivut_kentta]=="title"){
-        $syote["kentta"]="title";
-    }
-    else if ($_POST[topsivut_kentta]=="url"){
-        $syote["kentta"]="url";
+
+
+    if (isset($_POST["topsivut_".$i."_kentta"])){
+        $syote["kentta"]=$_POST["topsivut_".$i."_kentta"];
+
     }
     else {
-        $syote["kentta"]="title";
+        $syote["kentta"]=$topsivut["groupby"];
     } 
     
-    if ($_POST[topsivut_jarjestaja]=="selaimet"){
-        $syote["jarjestaja"]="selaimet";
-    }
-    else if ($_POST[topsivut_jarjestaja]=="sivulataukset"){
-        $syote["jarjestaja"]="sivulataukset";
+    if (isset($_POST["topsivut_".$i."_jarjestaja"])){
+        $syote["jarjestaja"]=$_POST["topsivut_".$i."_jarjestaja"];
     }
     else {
-        $syote["jarjestaja"]="sivulataukset";
+        $syote["jarjestaja"]=$topsivut["orderby"];
     } 
 
-    if ($_POST[topsivut_jarjestys]=="asc") {
-        $syote["jarjestys"]="ASC";
-    }
-    else if ($_POST[topsivut_jarjestys]=="desc") {
-        $syote["jarjestys"]="DESC";
+    if (isset($_POST["topsivut_".$i."_jarjestys"])) {
+        $syote["jarjestys"]=$_POST["topsivut_".$i."_jarjestys"];
     }
     else {
-        $syote["jarjestys"]="DESC";
+        $syote["jarjestys"]=$topsivut["orderdir"];
     } 
 
     //Datasuodattimien asetukset
-    if (isset($_POST[topsivut_url]) && $_POST[topsivut_url]!="") {
-        $syote["url"]=$_POST[topsivut_url];
+    if (isset($_POST["topsivut_".$i."_url"]) && $_POST["topsivut_".$i."_url"]!="") {
+        $syote["url"]=$_POST["topsivut_".$i."_url"];
     }
     else {
-        $syote["url"]="%";        
+        $syote["url"]=$topsivut["filterurl"];        
     }
-    if (isset($_POST[topsivut_url]) && $_POST[topsivut_title]!="") {
-        $syote["title"]=$_POST[topsivut_title];
+    if (isset($_POST["topsivut_".$i."_url"]) && $_POST["topsivut_".$i."_title"]!="") {
+        $syote["title"]=$_POST["topsivut_".$i."_title"];
     }
     else {
-        $syote["title"]="%";        
+        $syote["title"]=$topsivut["filtertitle"];        
     }
     
     return $syote;

@@ -8,36 +8,35 @@
         <link href="http://porna.users.cs.helsinki.fi/tsoha/css/main.css" rel="stylesheet">
     </head>
     <body>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#topsivut">Raporttinäkymä</a></li>
+    <li><a href="#tapahtumat">Kaikki tapahtumat</a></li>
+    <li><a href="#kavijat">Kaikki kävijät</a></li>
+    <li><a><form name="logout" action="index.php" method="post">Käyttäjä: <?php echo $_SESSION[kayttaja][nimi]; ?><input type="submit" name="logout" value="Ulos"></form></a></li>
+  </ul>
         <div class="container">
-        <h2>RAPORTTISIVU</h2>
-        <div> 
-        <form name="logout" action="index.php" method="post">
-            Käyttäjä: <?php echo $_SESSION[kayttaja][nimi]; ?>
-            <input type="submit" name="logout" value="Ulos">
-        </form>
-        <hr>
-        </div>
 
-        <form class="form-horizontal" role="form" name="input" action="index.php" method="post">
-
+<!--        <form class="form-horizontal" role="form" name="input" action="index.php" method="post">
+-->
 <?php
 //print_r($_POST);
-naytaTopSivut($topsivut);
-?>
-<?php 
-/*print "<pre>";print_r($topsivut);print "</pre>";
-echo "SESSION:<br>";
-print_r($_SESSION);
-echo "POST:<br>";
-print_r($_POST);
-*/?>
+naytaTopSivutOtsikko(sizeof($topsivut));
+for ($i=0; $i<sizeof($topsivut);$i++) {
+    naytaTopSivut($topsivut[$i],$i);
+}
 
+
+?>
+<h3 id="tapahtumat">Kaikki tapahtumat</h3>
 <?php
     naytaTapahtumaraportti($tapahtumadata);
-    naytaKavijaraportti($kavijadata);    
+?>
+<h3 id="kavijat">Kaikki kävijät (selaimet)</h3>
+<?php
+  naytaKavijaraportti($kavijadata);    
 ?>
 
-</form>
+<!--</form>-->
 </div>
 </body> 
 </html>

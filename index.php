@@ -34,23 +34,58 @@ if (empty($_SESSION["login"])) {
 }
 
 //Jatkaa tänne jos kirjautunut käyttäjä...
+$kayttaja=$_SESSION["kayttaja"]["nimi"];
 
-//Validoidaan syötteet tai alustetaan ensinäkymän alkuarvoja
+// 
+require 'libs/models/kayttajanasetukset.php';
+//Käsitellään mahdolliset Top-sivut raporttien lisäykset
+if ($_POST["topsivut_lisaa"]){
+    lisaaTopSivutRaportti($kayttaja);       
+}
+
+
+//Haetaan kannasta raporttikokoonpano
+$topsivut = haeKayttajanTopsivuRaportit($kayttaja);
+
+//Validoidaan syötteet tai alustetaan ensinäkymän alkuarvoja...
 require 'libs/validoi.php';
-$topsivut["syote"] = validoiTopSivutSyote();
+
+//...Tops-sivuille
+for ($i=0; $i<sizeof($topsivut);$i++) {
+    $topsivut[$i]["syote"] = validoiTopSivutSyote($i, $topsivut[$i]);
+}
+
+//...Muille raporteille
 $tapahtumadata["syote"] = validoiTapahtumaRaporttiSyote();
 $kavijadata["syote"] = validoiKavijaRaporttiSyote();
 
-//Model...
+//Käsiteellään Top-sivut raportin poisto
+if (isset($_POST["topsivut_poista"])){
+    //poistetaan kannasta raportin id:lla
+    poistaTopSivutRaportti($kayttaja, $topsivut[$_POST["topsivut_poista"]]["rid"]);       
+    //poistetaan ylläpito taulukosta
+    array_splice($topsivut, $_POST["topsivut_poista"], 1);
+   
+}
+
+//Päivitetään hakuparametrit kantaan viimeisimmällä raporttikokoonpanolla
+for ($i=0; $i<sizeof($topsivut);$i++) {
+    paivitaTopSivutRaportti($topsivut[$i]["syote"], $topsivut[$i]["uid"], $topsivut[$i]["rid"]);
+}
 
 //Top-sivut -raportti
-//Haetaan sivujen datarivit metriikoiden totaalit samoilla hakuehdoilla
-$topsivut["data"]["rivit"] = haeTopSivutRivit($topsivut["syote"]["kentta"], $topsivut["syote"]["alku"], $topsivut["syote"]["loppu"], $topsivut["syote"]["jarjestaja"], $topsivut["syote"]["jarjestys"], $topsivut["syote"]["title"], $topsivut["syote"]["url"]);
-$topsivut["data"]["totaalit"] = haeTopSivutTotaalit($topsivut["syote"]["kentta"], $topsivut["syote"]["alku"], $topsivut["syote"]["loppu"], $topsivut["syote"]["title"], $topsivut["syote"]["url"]);
+
+
+//Haetaan sivujen datarivit ja metriikoiden totaalit samoilla hakuehdoilla
+for ($i=0; $i<sizeof($topsivut);$i++) {
+    $topsivut[$i]["data"]["rivit"] = haeTopSivutRivit($topsivut[$i]["syote"]["kentta"], $topsivut[$i]["syote"]["alku"], $topsivut[$i]["syote"]["loppu"], $topsivut[$i]["syote"]["jarjestaja"], $topsivut[$i]["syote"]["jarjestys"], $topsivut[$i]["syote"]["title"], $topsivut[$i]["syote"]["url"]);
+    $topsivut[$i]["data"]["totaalit"] = haeTopSivutTotaalit($topsivut[$i]["syote"]["kentta"], $topsivut[$i]["syote"]["alku"], $topsivut[$i]["syote"]["loppu"], $topsivut[$i]["syote"]["title"], $topsivut[$i]["syote"]["url"]);
+}
 
 //Tapahtumatraportin ja Kävijäraportin datojen haku
 $tapahtumadata["data"]["rivit"] = haeTaulukko("events", $tapahtumadata["syote"]["alku"], $tapahtumadata["syote"]["loppu"]);
 $kavijadata["data"]["rivit"] = haeTaulukko("browsers", $kavijadata["syote"]["alku"], $kavijadata["syote"]["loppu"]);
+
 
 //View...
 

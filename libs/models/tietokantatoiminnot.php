@@ -84,6 +84,7 @@ function haeTopSivutRivit($kentta, $alku, $loppu, $jarjestaja, $jarjestys, $titl
     $teksti = "%";
     $where = $where."and cookie in (SELECT cookie FROM events WHERE title like '".$teksti."')";
 
+    
     $group = 'GROUP BY kentta ';
     $order = 'order by '.$jarjestaja.' '.$jarjestys.' ';
     $sql = $select.$where.$group.$order.';';
@@ -94,9 +95,6 @@ function haeTopSivutRivit($kentta, $alku, $loppu, $jarjestaja, $jarjestys, $titl
     $kysely->execute(array($alku, $loppu, $url, $title));
     
     $tulokset = $kysely->fetchAll(PDO::FETCH_ASSOC);
-//    echo $sql;
-//    die;
-
     
     return $tulokset;
    
